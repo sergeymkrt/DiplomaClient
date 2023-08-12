@@ -8,8 +8,8 @@
     "url": "https://github.com/suren-atoyan/react-pwa.git"
   },
   "bugs": {
-    "url": "https://github.com/suren-atoyan/react-pwa/issues",
-    "email": "contact@surenatoyan.com"
+    "url": "https://github.com/sergeymkrt/DiplomaClient/issues",
+    "email": "sergeymkrtumyan@gmail.com"
   },
   "license": "MIT",
   "scripts": {
@@ -27,6 +27,7 @@
     "@mui/material": "^5.10.6",
     "@mui/system": "^5.10.6",
     "@mui/utils": "^5.10.6",
+    "axios": "^1.4.0",
     "is-mobile": "^3.1.1",
     "notistack": "^2.0.5",
     "react": "^18.2.0",
@@ -49,7 +50,6 @@
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "https-localhost": "^4.7.1",
-    "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
     "typescript": "^4.8.3",

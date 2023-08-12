@@ -1,7 +1,5 @@
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MenuIcon from '@mui/icons-material/Menu';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,26 +10,16 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { FlexBox } from '@/components/styled';
 import { repository, title } from '@/config';
-import useNotifications from '@/store/notifications';
 import useSidebar from '@/store/sidebar';
 
-import { getRandomJoke } from './utils';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
   const [, sidebarActions] = useSidebar();
-  const [, notificationsActions] = useNotifications();
+  const navigate = useNavigate();
 
   function showNotification() {
-    notificationsActions.push({
-      options: {
-        content: (
-          <Alert severity="info">
-            <AlertTitle>Notification demo (random IT jokes :))</AlertTitle>
-            {getRandomJoke()}
-          </Alert>
-        ),
-      },
-    });
+    navigate('/');
   }
 
   return (
