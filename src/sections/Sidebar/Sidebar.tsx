@@ -8,7 +8,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
-import routes from '@/routes';
+import { pageRoutes } from '@/routes';
 import useSidebar from '@/store/sidebar';
 
 function Sidebar() {
@@ -24,7 +24,7 @@ function Sidebar() {
       swipeAreaWidth={30}
     >
       <List sx={{ width: 250, pt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
-        {Object.values(routes)
+        {Object.values(pageRoutes)
           .filter((route) => route.title)
           .map(({ path, title, icon: Icon }) => (
             <ListItem sx={{ p: 0 }} key={path}>

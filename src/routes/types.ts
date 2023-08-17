@@ -8,6 +8,11 @@ enum Pages {
   NotFound,
 }
 
+enum AuthPages {
+  Login,
+  Register,
+}
+
 type PathRouteCustomProps = {
   title?: string;
   component: FC;
@@ -15,6 +20,7 @@ type PathRouteCustomProps = {
 };
 
 type Routes = Record<Pages, PathRouteProps & PathRouteCustomProps>;
+type AuthRoutes = Record<AuthPages, PathRouteProps & PathRouteCustomProps>;
 
-export type { Routes };
-export { Pages };
+export type { Routes, AuthRoutes };
+export { Pages, AuthPages };
