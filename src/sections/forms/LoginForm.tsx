@@ -11,7 +11,9 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { LoginUser } from '@/api/Auth/AuthFunctions';
 
 const loginFormSchema = z.object({
   username: z.string().min(2, {
@@ -22,6 +24,7 @@ const loginFormSchema = z.object({
   }),
 });
 function LoginForm() {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -30,11 +33,19 @@ function LoginForm() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: LoginUser,
+    onSuccess: () => {
+      navigate('/');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    mutation.mutate(values);
   }
 
   return (

@@ -10,7 +10,9 @@ const AuthInterceptor: React.FC<AuthInterceptorProps> = ({ children }) => {
   const navigate = useNavigate();
   useQuery({
     queryFn: IsUserLoggedIn,
-    onError: () => navigate('/login'),
+    onError: () => {
+      navigate('/login');
+    },
     retry: false,
   });
   return <>{children}</>;

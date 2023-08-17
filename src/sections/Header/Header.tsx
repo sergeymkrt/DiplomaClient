@@ -8,6 +8,8 @@ import useSidebar from '@/store/sidebar';
 import { useNavigate } from 'react-router-dom';
 import { ModeToggle } from '@/components/Theme/mode-toggle';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Logout } from '@/api/Auth/UserData';
+import { useMutation } from 'react-query';
 
 function Header() {
   const [, sidebarActions] = useSidebar();
@@ -16,6 +18,12 @@ function Header() {
   function showNotification() {
     navigate('/');
   }
+  const logoutMutation = useMutation({
+    mutationFn: Logout,
+    onSuccess: () => {
+      navigate('/login');
+    },
+  });
 
   return (
     <header className="bg-background border border-t-0 border-x-0 py-4 px-6 flex justify-between items-center">
@@ -60,7 +68,7 @@ function Header() {
         </a>
         <button
           className="text-primary font-medium text-sm mr-4 focus:outline-none hover:underline"
-          // onClick={loginActions.toggle}
+          onClick={() => logoutMutation.mutate()}
         >
           <TooltipProvider>
             <Tooltip>
@@ -68,7 +76,7 @@ function Header() {
                 <LoginIcon />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Open Login dialog</p>
+                <p>Logout</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

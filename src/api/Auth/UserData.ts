@@ -3,11 +3,11 @@ import { User } from '@/store/user/types';
 import { AxiosResponse } from 'axios';
 
 export async function GetUserData(): Promise<AxiosResponse<User, unknown>> {
-  return get<User>('/Authentication/GetUserData');
+  return get<User>('/Authentication/getUser');
 }
 
-export async function IsUserLoggedIn(): Promise<AxiosResponse<boolean, unknown>> {
-  return get<boolean>('/Authentication/IsUserLoggedIn');
+export async function IsUserLoggedIn(): Promise<AxiosResponse<unknown, unknown>> {
+  return get<unknown>('/Authentication/isAuthenticated');
 }
 
 export async function Logout(): Promise<AxiosResponse<boolean, unknown>> {

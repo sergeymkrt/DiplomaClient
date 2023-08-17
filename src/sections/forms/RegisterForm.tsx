@@ -11,7 +11,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { User } from '@/store/user/types';
+import { useMutation } from 'react-query';
+import { RegisterUser } from '@/api/Auth/AuthFunctions';
 
 const registerSchema = z
   .object({
@@ -48,7 +51,8 @@ const registerSchema = z
   });
 
 function RegisterForm() {
-  // debugger;
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -62,10 +66,21 @@ function RegisterForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerSchema>) {
-    alert('HELLO');
-    console.log('Hi');
-    console.log(values);
+  const mutation = useMutation({
+    mutationFn: RegisterUser,
+    onSuccess: () => {
+      navigate('/login');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { repeatPassword, ...userData } = values;
+    const user: User = { ...userData };
+    mutation.mutate(user);
   }
 
   return (

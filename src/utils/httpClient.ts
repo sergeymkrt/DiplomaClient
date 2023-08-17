@@ -1,26 +1,12 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const http = axios.create({
-  baseURL: import.meta.env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_BACKEND_ENDPOINT,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
-http.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      const navigate = useNavigate();
-      navigate('/login');
-    }
-    return Promise.reject(error);
-  },
-);
 
 const httpClient = async <T>(config: AxiosRequestConfig): Promise<AxiosResponse<T, unknown>> => {
   return await http.request<T>(config);
