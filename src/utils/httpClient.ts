@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { ENV } from './env';
 
 const http = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_ENDPOINT,
+  baseURL: ENV.VITE_BACKEND_ENDPOINT,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
