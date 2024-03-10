@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { LoginUser } from '@/api/Auth/AuthFunctions';
 
 const loginFormSchema = z.object({

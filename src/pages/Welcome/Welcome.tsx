@@ -8,6 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import FileTable from '@/components/FileTable';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 function Welcome() {
   const files = [
@@ -42,32 +51,26 @@ function Welcome() {
   ];
 
   return (
-    <div className="flex justify-center items-center">
+    <div>
       <Meta title="Welcome" />
-      {/*<FullSizeCenteredFlexBox flexDirection={isPortrait ? 'column' : 'row'}>*/}
-      <div className="m-5 p-2 w-11/12 border-2 shadow-2xl rounded-md">
-        <Table>
-          <TableCaption>A list of your recent files.</TableCaption>
-          <TableHeader>
-            <TableHead className="w-[150px]">Name</TableHead>
-            <TableHead className="w-[150px]">Size</TableHead>
-            <TableHead className="w-[150px]">Type</TableHead>
-            <TableHead className="w-[150px]">Date</TableHead>
-          </TableHeader>
-          <TableBody>
-            {files.map((file) => (
-              <TableRow key={file.id}>
-                <TableCell className="font-medium">{file.name}</TableCell>
-                <TableCell>{file.size}</TableCell>
-                <TableCell>{file.type}</TableCell>
-                <TableCell>{file.date}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      {/*<Breadcrumb className="p-5">*/}
+      {/*  <BreadcrumbList>*/}
+      {/*    <BreadcrumbItem>*/}
+      {/*      <BreadcrumbLink href="/">Home</BreadcrumbLink>*/}
+      {/*    </BreadcrumbItem>*/}
+      {/*    <BreadcrumbSeparator />*/}
+      {/*    <BreadcrumbItem>*/}
+      {/*      <BreadcrumbLink href="/components">Components</BreadcrumbLink>*/}
+      {/*    </BreadcrumbItem>*/}
+      {/*    <BreadcrumbSeparator />*/}
+      {/*    <BreadcrumbItem>*/}
+      {/*      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>*/}
+      {/*    </BreadcrumbItem>*/}
+      {/*  </BreadcrumbList>*/}
+      {/*</Breadcrumb>*/}
+      <div className="flex justify-center items-center">
+        <FileTable />
       </div>
-
-      {/*</FullSizeCenteredFlexBox>*/}
     </div>
   );
 }

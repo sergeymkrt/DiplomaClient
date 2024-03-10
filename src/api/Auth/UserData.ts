@@ -7,7 +7,7 @@ export async function GetUserData(): Promise<AxiosResponse<User, unknown>> {
 }
 
 export async function IsUserLoggedIn(): Promise<AxiosResponse<unknown, unknown>> {
-  return get<unknown>('/Authentication/isAuthenticated');
+  return get<void>('/Authentication/isAuthenticated');
 }
 
 export async function Logout(): Promise<AxiosResponse<boolean, unknown>> {

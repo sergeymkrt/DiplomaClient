@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { User } from '@/store/user/types';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { RegisterUser } from '@/api/Auth/AuthFunctions';
 
 const registerSchema = z
@@ -30,9 +30,23 @@ const registerSchema = z
     userName: z.string().min(2, {
       message: 'Username must be at least 2 characters.',
     }),
-    password: z.string().min(8, {
-      message: 'Password must be at least 8 characters.',
-    }),
+    password: z
+      .string()
+      .min(12, {
+        message: 'Password must be at least 12 characters.',
+      })
+      .regex(new RegExp('.*\\d.*'), {
+        message: 'Password must contain at least one number.',
+      })
+      .regex(new RegExp('.*[A-Z].*'), {
+        message: 'Password must contain at least one uppercase letter.',
+      })
+      .regex(new RegExp('.*[a-z].*'), {
+        message: 'Password must contain at least one lowercase letter.',
+      })
+      .regex(new RegExp('.*[!@#$%^&*?].*'), {
+        message: 'Password must contain at least one special character.',
+      }),
     repeatPassword: z.string().min(8, {
       message: 'Password must be at least 8 characters.',
     }),
@@ -52,6 +66,7 @@ const registerSchema = z
 
 function RegisterForm() {
   const navigate = useNavigate();
+  // const [generatedPassword, setGeneratedPassword] = useState('' as string);
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -75,6 +90,23 @@ function RegisterForm() {
       console.log(error);
     },
   });
+
+  // const query = useQuery('generatePassword', {
+  //   queryFn: GeneratePassword,
+  //   onSuccess: (data) => {
+  //     setGeneratedPassword(data.data);
+  //   },
+  //   onError: (error) => {
+  //     console.log(error);
+  //   },
+  // });
+
+  // async function passwordGenerator() {
+  //   form.setValue('password', generatedPassword);
+  //   form.setValue('repeatPassword', generatedPassword);
+  //
+  //   await query.refetch();
+  // }
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -156,6 +188,15 @@ function RegisterForm() {
             </FormItem>
           )}
         />
+
+        {/* Button to generate password*/}
+
+        {/*<div className="flex  col-span-2">*/}
+        {/*<Button className="m-2" onClick={passwordGenerator}>*/}
+        {/*  Generate Password*/}
+        {/*</Button>*/}
+        {/*</div>*/}
+
         <FormField
           control={form.control}
           name="password"

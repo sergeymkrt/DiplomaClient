@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModeToggle } from '@/components/Theme/mode-toggle';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Logout } from '@/api/Auth/UserData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 function Header() {
   const [, sidebarActions] = useSidebar();

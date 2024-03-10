@@ -7,14 +7,14 @@ import { withErrorHandler } from '@/error-handling';
 import AppErrorBoundaryFallback from '@/error-handling/fallbacks/App';
 import Pages from '@/routes/Pages';
 import Notifications from '@/sections/Notifications';
-import SW from '@/sections/SW';
+// import SW from '@/sections/SW';
 
 function App() {
   return (
     <Fragment>
       <CssBaseline />
       <Notifications />
-      <SW />
+      {/*<SW />*/}
       <BrowserRouter>
         <Pages />
       </BrowserRouter>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { IsUserLoggedIn } from '@/api/Auth/UserData';
 
 interface AuthInterceptorProps {
@@ -8,13 +8,19 @@ interface AuthInterceptorProps {
 }
 const AuthInterceptor: React.FC<AuthInterceptorProps> = ({ children }) => {
   const navigate = useNavigate();
-  useQuery({
+  const query = useQuery({
+    queryKey: ['isUserLoggedIn'],
     queryFn: IsUserLoggedIn,
-    onError: () => {
-      navigate('/login');
-    },
+    // throwOnError: (error, query) => {
+    //   navigate('/login');
+    // },
+
+    // onError: () => {
+    //   navigate('/login');
+    // },
     retry: false,
   });
+  query.isError && navigate('/login');
   return <>{children}</>;
 };
 

@@ -2,7 +2,7 @@ import { ComponentType, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import { ThemeProvider } from '@/components/Theme/theme-provider';
 
@@ -24,5 +24,4 @@ function render(App: ComponentType) {
     </StrictMode>,
   );
 }
-
 export default render;
