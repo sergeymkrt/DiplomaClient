@@ -6,6 +6,7 @@ import type { SvgIconProps } from '@mui/material/SvgIcon';
 enum Pages {
   Welcome,
   NotFound,
+  Groups = 2,
 }
 
 enum AuthPages {
