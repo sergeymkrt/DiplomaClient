@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import {
   Dialog,
@@ -22,44 +22,33 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import cn from '@/utils/shadCnUtils';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { GetMockGroupUsers } from '@/components/GroupDialog/fetchData';
+import { CreateGroup } from '@/api/Auth/GroupData';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Group } from '@/api/interfaces/Group';
 
-function GroupDialog({ id }: { id: number }) {
+interface OptionalUser {
+  id: number;
+  email: string;
+}
+
+function GroupDialog({ title, group }: { title: string; group: Group }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [users, setUsers] = React.useState<{ id: number; email: string }[]>([]);
-  const groupPagination = {
-    pageNumber: 0,
-    pageSize: 10,
-  };
-
-  const groupUsersQuery = useQuery({
-    queryKey: ['groupUsers'],
-    queryFn: () => GetMockGroupUsers(groupPagination),
-    placeholderData: keepPreviousData,
-  });
-  setUsers(groupUsersQuery.data?.rows || []);
-
-  function addUsers(user: { id: number; email: string }) {
-    // add users
-    setUsers([...users, user]);
-  }
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Edit Group</Button>
+          <Button variant="outline">{title} Group</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit group</DialogTitle>
+            <DialogTitle>{title} group</DialogTitle>
             <DialogDescription>
-              Make changes to your group here. Click save when you&apos;re done.
+              {title} your group here. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
-          <GroupForm users={users} />
+          <GroupForm groupId={id} groupName={groupName} groupUsers={groupUsers || []} />
         </DialogContent>
       </Dialog>
     );
@@ -68,16 +57,16 @@ function GroupDialog({ id }: { id: number }) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline">{title} Group</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Edit profile</DrawerTitle>
+          <DrawerTitle>{title} group</DrawerTitle>
           <DrawerDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
+            Make changes to your group here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <GroupForm users={users} />
+        <GroupForm groupId={id} groupName={groupName} groupUsers={groupUsers || []} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -88,35 +77,90 @@ function GroupDialog({ id }: { id: number }) {
   );
 }
 
-function GroupForm({ users }: { users: { id: number; email: string }[] | undefined }) {
+function GroupForm({ group }: { group: Group }) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const queryClient = useQueryClient();
+  const [users, setUsers] = React.useState<{ id: number; randId: string; email: string }[]>(
+    groupUsers?.map((user) => ({
+      id: user.id,
+      randId: Math.random().toString(36).substring(7),
+      email: user.email,
+    })),
+  );
 
-  const addUser = () => {};
+  // State to hold the current user email being entered
+  const [email, setEmail] = useState('');
+  const [description, setDescription] = useState('');
+  const [name, setName] = useState(groupId === 0 ? '' : groupName);
 
-  return (
-    <form className={cn('grid items-start gap-4', isDesktop ? '' : 'px-4')}>
-      {users?.map((user) => (
-        <UserRow key={user.id} user={user} />
-      ))}
-      <Label htmlFor="email">Add user</Label>
-      <div className="flex items-center gap-4">
-        <Input id="email" type="email" />
-        <Button type="button" variant="outline">
-          Add
+  const addUser = () => {
+    if (email.trim() !== '') {
+      // Update the users state with the new user
+      setUsers([
+        ...users,
+        { id: 0, email: email, randId: Math.random().toString(36).substring(7) },
+      ]);
+      // Clear the email input field
+      setEmail('');
+    }
+  };
+
+  const createGroupMutation = useMutation({
+    mutationFn: (group: { name: string; users: { email: string }[] }) => CreateGroup(group),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 'groups',
+      });
+      // invalidateQueries('groups');
+      // invalidateQueries('group');
+    },
+  });
+
+  // Function to handle saving the list of users (this is just a placeholder)
+  const saveGroup = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (groupId === 0) {
+    }
+  };
+
+  const removeUser = (randId: string) => {
+    // Filter out the user with the specified id
+    setUsers(users.filter((user) => user.randId !== randId));
+  };
+
+  function UserRow({ user }: { user: { id: number; email: string; randId: string } }) {
+    return (
+      <div className="flex items-center justify-between">
+        <div>{user.email}</div>
+        <Button variant="outline" onClick={() => removeUser(user.randId)}>
+          Remove
         </Button>
       </div>
+    );
+  }
 
+  return (
+    <form className={cn('grid items-start gap-4', isDesktop ? '' : 'px-4')} onSubmit={saveGroup}>
+      <Label htmlFor="name">Group name</Label>
+      <Input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      <Label htmlFor="description">Description</Label>
+
+      {groupId === 0 ? <div></div> : <div>Users</div>}
+      {groupId !== 0 && users?.map((user) => <UserRow key={user.randId} user={user} />)}
+      {groupId !== 0 && (
+        <div>
+          <Label htmlFor="email">Add user</Label>
+          <div className="flex items-center gap-4">
+            <Input id="email" type="email" onChange={(e) => setEmail(e.target.value)} />
+            <Button type="button" variant="outline" disabled={email == ''} onClick={addUser}>
+              Add
+            </Button>
+          </div>
+        </div>
+      )}
       <Button type="submit">Save changes</Button>
     </form>
-  );
-}
-
-function UserRow({ user }: { user: { id: number; email: string } }) {
-  return (
-    <div className="flex items-center justify-between">
-      <div>{user.email}</div>
-      <Button variant="outline">Remove</Button>
-    </div>
   );
 }
 

@@ -202,14 +202,14 @@ function FileTable() {
         </select>
         {dataQuery.isFetching ? 'Loading...' : null}
       </div>
-      <div>
-        Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-        {dataQuery.data?.rowCount.toLocaleString()} Rows
-      </div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <pre>{JSON.stringify(pagination, null, 2)}</pre>
+      {/*<div>*/}
+      {/*  Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}*/}
+      {/*  {dataQuery.data?.rowCount.toLocaleString()} Rows*/}
+      {/*</div>*/}
+      {/*<div>*/}
+      {/*  <button onClick={() => rerender()}>Force Rerender</button>*/}
+      {/*</div>*/}
+      {/*<pre>{JSON.stringify(pagination, null, 2)}</pre>*/}
     </div>
   );
 }

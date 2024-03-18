@@ -1,6 +1,6 @@
 import Pagination from '@/api/interfaces/Pagination';
 
-const groupUsers = [
+export const groupUsers = [
   {
     id: 1,
     email: 'user1@gmail.com',
