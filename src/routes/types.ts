@@ -12,6 +12,7 @@ enum Pages {
 enum AuthPages {
   Login,
   Register,
+  VerifyEmail
 }
 
 type PathRouteCustomProps = {

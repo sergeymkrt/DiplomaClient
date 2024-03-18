@@ -35,6 +35,12 @@ const authRoutes: AuthRoutes = {
     path: '/register',
     title: 'Register',
   },
+  [AuthPages.VerifyEmail]: {
+    component: asyncComponentLoader(() => import('@/pages/VerifyEmail')),
+    path: '/verifyEmail',
+    title: 'VerifyEmail'
+  }
+
 };
 
 export { pageRoutes, authRoutes };

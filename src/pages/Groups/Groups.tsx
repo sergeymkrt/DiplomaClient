@@ -4,6 +4,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import GroupDialog from '@/components/GroupDialog';
 import { groupUsers } from '@/components/GroupDialog/fetchData';
 import { GetGroups } from '@/api/Auth/GroupData';
+import { CreateGroupDto, Group } from '@/api/interfaces/Group';
 
 function Groups() {
   // const directoriesQuery = useQuery({
@@ -21,7 +22,7 @@ function Groups() {
   return (
     <div>
       <div className="pl-8 pt-8">
-        <GroupDialog title={'Add'} id={0} groupName="" groupUsers={undefined} />
+        <GroupDialog title={'Add'} group={{ id:0 } as Group}/>
       </div>
       <div className="p-8 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {directoriesQuery.data?.data.items?.map((group) => (
@@ -32,9 +33,7 @@ function Groups() {
             <CardFooter className="flex justify-between">
               <GroupDialog
                 title={'Edit'}
-                id={group.id}
-                groupName={group.name}
-                groupUsers={groupUsers}
+                group={group}
               />
             </CardFooter>
           </Card>

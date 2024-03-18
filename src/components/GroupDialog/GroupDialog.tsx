@@ -24,7 +24,7 @@ import { Label } from '@/components/ui/label';
 import cn from '@/utils/shadCnUtils';
 import { CreateGroup } from '@/api/Auth/GroupData';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Group } from '@/api/interfaces/Group';
+import { CreateGroupDto, Group } from '@/api/interfaces/Group';
 
 interface OptionalUser {
   id: number;
@@ -48,7 +48,7 @@ function GroupDialog({ title, group }: { title: string; group: Group }) {
               {title} your group here. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
-          <GroupForm groupId={id} groupName={groupName} groupUsers={groupUsers || []} />
+          <GroupForm group={group} />
         </DialogContent>
       </Dialog>
     );
@@ -66,7 +66,7 @@ function GroupDialog({ title, group }: { title: string; group: Group }) {
             Make changes to your group here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <GroupForm groupId={id} groupName={groupName} groupUsers={groupUsers || []} />
+        <GroupForm group={group} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -81,7 +81,7 @@ function GroupForm({ group }: { group: Group }) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const queryClient = useQueryClient();
   const [users, setUsers] = React.useState<{ id: number; randId: string; email: string }[]>(
-    groupUsers?.map((user) => ({
+    group.users?.map((user) => ({
       id: user.id,
       randId: Math.random().toString(36).substring(7),
       email: user.email,
@@ -91,7 +91,7 @@ function GroupForm({ group }: { group: Group }) {
   // State to hold the current user email being entered
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
-  const [name, setName] = useState(groupId === 0 ? '' : groupName);
+  const [name, setName] = useState(group.id === 0 ? '' : group.name);
 
   const addUser = () => {
     if (email.trim() !== '') {
@@ -106,7 +106,7 @@ function GroupForm({ group }: { group: Group }) {
   };
 
   const createGroupMutation = useMutation({
-    mutationFn: (group: { name: string; users: { email: string }[] }) => CreateGroup(group),
+    mutationFn: (group: CreateGroupDto) => CreateGroup(group),
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === 'groups',
@@ -120,8 +120,8 @@ function GroupForm({ group }: { group: Group }) {
   const saveGroup = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (groupId === 0) {
-    }
+    // if (groupId === 0) {
+    // }
   };
 
   const removeUser = (randId: string) => {
@@ -146,9 +146,9 @@ function GroupForm({ group }: { group: Group }) {
       <Input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
       <Label htmlFor="description">Description</Label>
 
-      {groupId === 0 ? <div></div> : <div>Users</div>}
-      {groupId !== 0 && users?.map((user) => <UserRow key={user.randId} user={user} />)}
-      {groupId !== 0 && (
+      {group.id === 0 ? <div></div> : <div>Users</div>}
+      {group.id !== 0 && users?.map((user) => <UserRow key={user.randId} user={user} />)}
+      {group.id !== 0 && (
         <div>
           <Label htmlFor="email">Add user</Label>
           <div className="flex items-center gap-4">

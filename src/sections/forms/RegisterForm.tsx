@@ -15,6 +15,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { User } from '@/store/user/types';
 import { useMutation } from '@tanstack/react-query';
 import { RegisterUser } from '@/api/Auth/AuthFunctions';
+import useNotifications from '@/store/notifications';
+import { SnackbarMessage } from 'notistack';
 
 const registerSchema = z
   .object({
@@ -66,6 +68,7 @@ const registerSchema = z
 
 function RegisterForm() {
   const navigate = useNavigate();
+  const [notifications, notifActions] = useNotifications();
   // const [generatedPassword, setGeneratedPassword] = useState('' as string);
 
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -87,7 +90,10 @@ function RegisterForm() {
       navigate('/login');
     },
     onError: (error) => {
-      console.log(error);
+      notifActions.push({
+        options:{variant: 'error'},
+        message: error.message
+      })
     },
   });
 
