@@ -21,6 +21,8 @@ import { fetchData, GetMockDirectories } from './fetchData';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { GetDirectories } from '@/api/Business/Directories';
 import DirectoryPagination from '@/api/interfaces/DirectoryPagination';
+import useCurrentDirectory from '@/store/Directory';
+import { Badge } from '@/components/ui/badge';
 
 const columnHelper = createColumnHelper<File>();
 const columns = [
@@ -43,16 +45,20 @@ const columns = [
   columnHelper.accessor((row) => row.id, {
     header: 'Download',
     cell: (info) => {
-      const { value } = info;
-      return <span>Download file.{value}</span>;
+      return <Badge variant={'outline'}>Download</Badge>;
+    },
+  }),
+  columnHelper.accessor((row) => row.id, {
+    header: 'Delete',
+    cell: (info) => {
+      return <Badge variant={'destructive'}>Delete</Badge>;
     },
   }),
 ];
 
 function FileTable() {
   const rerender = React.useReducer(() => ({}), {})[1];
-
-  const [directoryId, setDirectoryId] = React.useState<number | undefined>(undefined);
+  const [directoryId, directoryActions] = useCurrentDirectory();
 
   const initialDirectoryPagination: DirectoryPagination = {
     pageNumber: 0,
@@ -93,7 +99,7 @@ function FileTable() {
     // debugTable: true,
   });
   function setDirectory(id: number | undefined) {
-    setDirectoryId(id);
+    directoryActions.setDirectory(id);
     console.log('setDirectoryId', id);
   }
 

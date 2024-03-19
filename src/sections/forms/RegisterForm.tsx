@@ -87,13 +87,13 @@ function RegisterForm() {
   const mutation = useMutation({
     mutationFn: RegisterUser,
     onSuccess: () => {
-      navigate('/login');
+      navigate('/verifyEmail');
     },
     onError: (error) => {
       notifActions.push({
-        options:{variant: 'error'},
-        message: error.message
-      })
+        options: { variant: 'error' },
+        message: error.message,
+      });
     },
   });
 

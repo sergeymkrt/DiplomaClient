@@ -1,40 +1,42 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { fetchData } from '@/pages/Groups/fetchData';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import GroupDialog from '@/components/GroupDialog';
-import { groupUsers } from '@/components/GroupDialog/fetchData';
-import { GetGroups } from '@/api/Auth/GroupData';
-import { CreateGroupDto, Group } from '@/api/interfaces/Group';
+import { GetGroups } from '@/api/Business/GroupData';
+import { Group } from '@/api/interfaces/Group';
+import useNotifications from '@/store/notifications';
 
 function Groups() {
-  // const directoriesQuery = useQuery({
-  //   queryKey: ['directories'],
-  //   queryFn: () => fetchData({ pageIndex: 0, pageSize: 50 }),
-  //   placeholderData: keepPreviousData,
-  // });
+  const [, notificationActions] = useNotifications();
   const pagination = { pageSize: 10, pageNumber: 1 };
-  const directoriesQuery = useQuery({
+  const { data } = useQuery({
     queryKey: ['groups'],
-    queryFn: () => GetGroups(pagination),
+    queryFn: async () => {
+      return GetGroups(pagination)
+        .then((r) => r)
+        .catch(() => {
+          notificationActions.push({
+            message: 'Failed to fetch groups',
+            options: { variant: 'error' },
+          });
+        });
+    },
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 
   return (
     <div>
       <div className="pl-8 pt-8">
-        <GroupDialog title={'Add'} group={{ id:0 } as Group}/>
+        <GroupDialog title={'Add'} group={{ id: 0 } as Group} />
       </div>
       <div className="p-8 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {directoriesQuery.data?.data.items?.map((group) => (
+        {data?.data.data.items?.map((group) => (
           <Card key={group.id}>
             <CardHeader>
               <CardTitle>{group.name}</CardTitle>
             </CardHeader>
             <CardFooter className="flex justify-between">
-              <GroupDialog
-                title={'Edit'}
-                group={group}
-              />
+              <GroupDialog title={'Edit'} group={group} />
             </CardFooter>
           </Card>
         ))}

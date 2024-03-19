@@ -1,7 +1,8 @@
 import * as z from 'zod';
 import { loginFormSchema } from '@/sections/forms/LoginForm';
-import { get, post } from '@/utils/httpClient';
+import { get, patch, post } from '@/utils/httpClient';
 import { User } from '@/store/user/types';
+import QueryStringBuilder from '@/utils/QueryStringBuilder';
 
 export async function LoginUser(userData: z.infer<typeof loginFormSchema>) {
   return post<boolean>(`/Authentication/login`, userData);
@@ -21,4 +22,9 @@ export async function GetUser() {
 
 export async function GeneratePassword() {
   return get<string>(`/Authentication/GenerateStrongPassword`);
+}
+
+export async function VerifyEmailPost(email: string, token: string) {
+  const query = QueryStringBuilder({ email, token });
+  return patch<boolean>(`/Authentication/verifyEmail?${query}`);
 }

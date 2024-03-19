@@ -18,8 +18,8 @@ export interface ShortUser {
 }
 
 export enum AccessLevel {
-  Basic,
-  Conditential,
-  Secret,
-  TopSecret,
+  Basic = 1,
+  Confidential = 2,
+  Secret = 3,
+  TopSecret = 4,
 }
