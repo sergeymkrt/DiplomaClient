@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ENV } from './env';
 import useNotifications from '@/store/notifications';
 
-const http = axios.create({
+export const http = axios.create({
   baseURL: ENV.VITE_BACKEND_ENDPOINT,
   withCredentials: true,
   headers: {

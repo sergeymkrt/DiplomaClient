@@ -1,26 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { IsUserLoggedIn } from '@/api/Auth/UserData';
+import { IsUserLoggedIn, RefreshToken } from '@/api/Auth/UserData';
 
 interface AuthInterceptorProps {
   children: React.ReactNode;
 }
 const AuthInterceptor: React.FC<AuthInterceptorProps> = ({ children }) => {
   const navigate = useNavigate();
-  const query = useQuery({
+  const { data } = useQuery({
     queryKey: ['isUserLoggedIn'],
     queryFn: IsUserLoggedIn,
-    // throwOnError: (error, query) => {
-    //   navigate('/login');
-    // },
-
-    // onError: () => {
-    //   navigate('/login');
-    // },
     retry: false,
   });
-  query.isError && navigate('/login');
+  const query = useQuery({
+    queryKey: ['refreshToken'],
+    queryFn: RefreshToken,
+    retry: false,
+    refetchOnMount: false,
+  });
+
+  data?.status === 401 &&
+    query.refetch().then(({ data }) => {
+      data?.status == 401 && navigate('/login');
+    });
+
   return <>{children}</>;
 };
 
